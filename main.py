@@ -18,10 +18,10 @@ class MyWidget(QMainWindow):
     def paintEvent(self, event):
         qp = QPainter()
         qp.begin(self)
-        self.drawCircle(qp)
+        self.drawCircle1(qp)
         qp.end()
 
-    def drawCircle(self, qp):
+    def drawCircle1(self, qp):
         r = randint(1, 275)
         r2 = randint(1, 210)
         qp.setBrush(QColor('yellow'))
