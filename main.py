@@ -1,32 +1,26 @@
 import sys
-from random import randint
-from PyQt5.QtWidgets import QMainWindow, QApplication
-from PyQt5.QtGui import QPainter, QColor
+import sqlite3
 from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
 
-
+ 
 class MyWidget(QMainWindow):
-    def _init__(self):
+    def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)
-        self.pushButton.clicked.connect(self.run)
-        self.show()
-
-    def run(self):
-        self.repaint()
-
-    def paintEvent(self, event):
-        qp = QPainter()
-        qp.begin(self)
-        self.drawCircle1(qp)
-        qp.end()
-
-    def drawCircle1(self, qp):
-        r2 = randint(1, 210)
-        qp.setBrush(QColor('yellow'))
-        qp.drawEllipse(275, 210, r2, r2)
-
+        uic.loadUi('main.ui',self)
+        self.con = sqlite3.connect("coffee.db")
+        cur = self.con.cursor()
+        result = cur.execute("""SELECT * FROM coffee2""").fetchall()        
+        self.tableWidget.setColumnCount(8)
+        self.tableWidget.setRowCount(0)
+        for i, row in enumerate(result):
+            self.tableWidget.setRowCount(self.tableWidget.rowCount() + 1)
+            for j, elem in enumerate(row):
+                self.tableWidget.setItem(i, j, QTableWidgetItem(elem))
+        self.tableWidget.resizeColumnsToContents()        
+ 
 
 app = QApplication(sys.argv)
 ex = MyWidget()
+ex.show()
 sys.exit(app.exec_())
